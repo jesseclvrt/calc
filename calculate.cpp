@@ -39,13 +39,13 @@ int evaluate(char expression[]) {
         if (std::isspace(expression[i])) { continue; }
 
         else if (std::isdigit(expression[i])) {
-            int value = 0;
+            int num = 0;
             while (isdigit(expression[i])) {
-                value *= 10;
-                value += expression[i] - '0';
+                num *= 10;
+                num += expression[i] - '0';
                 i++;
             }
-            values->push(value);
+            values->push(num);
         }
 
         else if (expression[i] == '(') {
@@ -56,7 +56,7 @@ int evaluate(char expression[]) {
             while (!operators->empty() && operators->top() != '(') {
                 evaluateTops(values, operators);
             }
-            operators->pop();
+            operators->pop(); // opening brace
         }
 
         else { // expression[i] is operator
