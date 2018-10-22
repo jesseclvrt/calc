@@ -54,7 +54,31 @@ int evaluate(char expression[]) {
             }
             operators.pop();
         }
+
+        else { // expression[i] is operator
+            while (!operators.empty()
+                    && opOrder(operators.top()) >= opOrder(expression[i])) {
+                int op2 = values.top();
+                values.pop();
+                int op1 = values.top();
+                values.pop();
+                char op = operators.top();
+                operators.pop();
+                values.push(applyOperation(op1, op2, op));
+            }
+            operators.push(expression[i]);
+        }
+    } // end for
+    while (!operators.empty()) {
+        int op2 = values.top();
+        values.pop();
+        int op1 = values.top();
+        values.pop();
+        char op = operators.top();
+        operators.pop();
+        values.push(applyOperation(op1, op2, op));
     }
+    return values.top();
 }
 
 int main(int argc, char* argv[]) {
@@ -64,7 +88,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     for (int i = 1; i <= argc; i++) {
-        evaluate(argv[i]);
+        std::cout << argv[i] << " = " << evaluate(argv[i]);
     }
     return 0;
 }
