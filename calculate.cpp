@@ -22,9 +22,19 @@ int applyOperation(int x, int y, char op) {
     }
 }
 
+void evaluateTops(std::stack<int>* values, std::stack<char>* operators) {
+    int op2 = values->top();
+    values->pop();
+    int op1 = values->top();
+    values->pop();
+    char op = operators->top();
+    operators->pop();
+    values->push(applyOperation(op1, op2, op));
+}
+
 int evaluate(char expression[]) {
-    std::stack<int> values;
-    std::stack<char> operators;
+    std::stack<int>* values = new std::stack<int>;
+    std::stack<char>* operators = new std::stack<char>;
     for (int i = 0; i < strlen(expression); i++) {
         if (std::isspace(expression[i])) { continue; }
 
@@ -35,50 +45,35 @@ int evaluate(char expression[]) {
                 value += expression[i] - '0';
                 i++;
             }
-            values.push(value);
+            values->push(value);
         }
 
         else if (expression[i] == '(') {
-            operators.push(expression[i]);
+            operators->push(expression[i]);
         }
 
         else if (expression[i] == ')') {
-            while (!operators.empty() && operators.top() != '(') {
-                int op2 = values.top();
-                values.pop();
-                int op1 = values.top();
-                values.pop();
-                char op = operators.top();
-                operators.pop();
-                values.push(applyOperation(op1, op2, op));
+            while (!operators->empty() && operators->top() != '(') {
+                evaluateTops(values, operators);
             }
-            operators.pop();
+            operators->pop();
         }
 
         else { // expression[i] is operator
-            while (!operators.empty()
-                    && opOrder(operators.top()) >= opOrder(expression[i])) {
-                int op2 = values.top();
-                values.pop();
-                int op1 = values.top();
-                values.pop();
-                char op = operators.top();
-                operators.pop();
-                values.push(applyOperation(op1, op2, op));
+            while (!operators->empty()
+                    && opOrder(operators->top()) >= opOrder(expression[i])) {
+                evaluateTops(values, operators);
             }
-            operators.push(expression[i]);
+            operators->push(expression[i]);
         }
     } // end for
-    while (!operators.empty()) {
-        int op2 = values.top();
-        values.pop();
-        int op1 = values.top();
-        values.pop();
-        char op = operators.top();
-        operators.pop();
-        values.push(applyOperation(op1, op2, op));
+    while (!operators->empty()) {
+        evaluateTops(values, operators);
     }
-    return values.top();
+    int solution = values->top();
+    delete values;
+    delete operators;
+    return solution;
 }
 
 int main(int argc, char* argv[]) {
@@ -87,8 +82,8 @@ int main(int argc, char* argv[]) {
             "Valid symbols: + - * / ^ ()" << std::endl;
         return 0;
     }
-    for (int i = 1; i <= argc; i++) {
-        std::cout << argv[i] << " = " << evaluate(argv[i]);
+    for (int i = 1; i < argc; i++) {
+        std::cout << argv[i] << " = " << evaluate(argv[i]) << std::endl;
     }
     return 0;
 }
