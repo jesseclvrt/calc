@@ -70,12 +70,15 @@ double evaluate(char expression[]) {
                     || expression[i] == '.'
                     || (expression[i] == '-' && expression[i+1] == '-')) {
             int start = i;
+            int end = i;
+            if (expression[start] == '-' && expression[start+1] == '-') {
+                i += 2;
+            }
             while (isdigit(expression[i+1])
                     || expression[i+1] == '.') {
                 i++;
             }
-            int end = i;
-            values.push(parseNum(expression, start, end));
+            values.push(parseNum(expression, start, i));
         } else if (expression[i] == '(') {
             operators.push(expression[i]);
         } else if (expression[i] == ')') {
