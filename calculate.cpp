@@ -12,7 +12,7 @@ int opOrder(char op) {
     }
 }
 
-int applyOperation(int x, int y, char op) {
+double applyOperation(int x, int y, char op) {
     switch (op) {
         case('+') : return x + y;
         case('-') : return x - y;
@@ -22,54 +22,79 @@ int applyOperation(int x, int y, char op) {
     }
 }
 
-void evaluateTops(std::stack<int>* values, std::stack<char>* operators) {
-    int op2 = values->top();
-    values->pop();
-    int op1 = values->top();
-    values->pop();
-    char op = operators->top();
-    operators->pop();
-    values->push(applyOperation(op1, op2, op));
+void evaluateTops(std::stack<double>& values, std::stack<char>& operators) {
+    double op2 = values.top();
+    values.pop();
+    double op1 = values.top();
+    values.pop();
+    char op = operators.top();
+    operators.pop();
+    values.push(applyOperation(op1, op2, op));
 }
 
-int evaluate(char expression[]) {
-    std::stack<int>* values = new std::stack<int>;
-    std::stack<char>* operators = new std::stack<char>;
+double parseNum(char expression[], int start, int end) {
+    bool negative = false;
+    if (expression[start] == '-' && expression[start + 1] == '-') {
+        negative = true;
+        start += 2;
+    }
+    double decimal = 0;
+    double solution = 0;
+    while (start <= end) {
+        if (expression[start] == '.') {
+            decimal = 1;
+            start++;
+            continue;
+        }
+        if (decimal) {
+            decimal *= 10;
+            solution += (expression[start] - '0') / decimal;
+        } else {
+            solution *= 10;
+            solution += expression[start] - '0';
+        }
+        start++;
+    }
+    if (negative) {
+        solution *= -1;
+    }
+    return solution;
+}
+
+double evaluate(char expression[]) {
+    std::stack<double> values;
+    std::stack<char> operators;
     for (int i = 0; i < strlen(expression); i++) {
         if (std::isspace(expression[i])) { continue; }
-        else if (std::isdigit(expression[i])) {
-            //TODO make parser function, make work with doubles
-            //TODO make work with negative numbers (new symbol for -? negative is --?)
-            int num = 0;
-            while (isdigit(expression[i])) {
-                num *= 10;
-                num += expression[i] - '0';
+        else if (std::isdigit(expression[i])
+                    || expression[i] == '.'
+                    || (expression[i] == '-' && expression[i+1] == '-')) {
+            int start = i;
+            while (isdigit(expression[i+1])
+                    || expression[i+1] == '.') {
                 i++;
             }
-            i--;
-            values->push(num);
+            int end = i;
+            values.push(parseNum(expression, start, end));
         } else if (expression[i] == '(') {
-            operators->push(expression[i]);
+            operators.push(expression[i]);
         } else if (expression[i] == ')') {
-            while (!operators->empty() && operators->top() != '(') {
+            while (!operators.empty() && operators.top() != '(') {
                 evaluateTops(values, operators);
             }
-            operators->pop(); // opening brace
+            operators.pop(); // opening brace
         } else { // expression[i] is operator
-            while (!operators->empty()
-                    && opOrder(operators->top()) >= opOrder(expression[i])) {
+            while (!operators.empty()
+                    && opOrder(operators.top()) >= opOrder(expression[i])) {
                 evaluateTops(values, operators);
             }
-            operators->push(expression[i]);
+            operators.push(expression[i]);
         }
     } // end for
-    while (!operators->empty()) {
+    while (!operators.empty()) {
         evaluateTops(values, operators);
     }
-    int solution = values->top();
-    delete values;
-    delete operators;
-    return solution;
+    return values.top();
 }
 
 int main(int argc, char* argv[]) {
