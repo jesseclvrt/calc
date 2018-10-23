@@ -12,7 +12,7 @@ int opOrder(char op) {
     }
 }
 
-double applyOperation(int x, int y, char op) {
+double applyOperation(double x, double y, char op) {
     switch (op) {
         case('+') : return x + y;
         case('-') : return x - y;
@@ -99,10 +99,12 @@ double evaluate(char expression[]) {
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cout << "Evaluates simple expressions.\n"
-            "Valid operations: + - * / ^ (). Spaces are disallowed unless"
-            " the argument is enclosed in \"quotation marks\".\nHandles "
-            "multiple expressions." << std::endl;
+        std::cout << "Evaluates simple infix expressions.\n"
+            "Valid operations: + - * / ^ ()\n"
+            "Represent negative numbers with a prepended \'--\' sign.\n"
+            "Spaces and parenthesis are disallowed unless "
+            "the argument is enclosed in \"quotation marks\".\n"
+            "Handles multiple expressions." << std::endl;
         return 0;
     }
     for (int i = 1; i < argc; i++) {
