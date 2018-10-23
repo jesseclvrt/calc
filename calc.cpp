@@ -10,6 +10,11 @@
  * Spaces and parenthesis are disallowed unless
  * the argument is enclosed in "quotation marks".
  * Handles multiple expressions.
+ * 
+ * main returns
+ * 0: successful execution
+ * 1: about message/no args
+ * 2: bad expression
  */
 
 #include <iostream>
@@ -44,7 +49,7 @@ double applyOperation(double x, double y, char op) {
 // the operator stack, then places solution on the values stack.
 void evaluateTops(std::stack<double>& values, std::stack<char>& operators) {
     if (values.size() < 2 || operators.size() < 1) {
-        throw 1;
+        throw 2;
     }
     double op2 = values.top();
     values.pop();
@@ -123,7 +128,7 @@ double evaluate(char expression[]) {
         evaluateTops(values, operators);
     }
     if (values.size() != 1 || operators.size() != 0) { //bad expression
-        throw 1;
+        throw 2;
     }
     return values.top();
 }
@@ -137,7 +142,7 @@ int main(int argc, char* argv[]) {
             "Spaces and parenthesis are disallowed unless "
             "the argument is enclosed in \"quotation marks\".\n"
             "Handles multiple expressions." << std::endl;
-        return 0;
+        return 1;
     }
     for (int i = 1; i < argc; i++) {
         try {
