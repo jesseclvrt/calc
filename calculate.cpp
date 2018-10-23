@@ -37,7 +37,9 @@ int evaluate(char expression[]) {
     std::stack<char>* operators = new std::stack<char>;
     for (int i = 0; i < strlen(expression); i++) {
         if (std::isspace(expression[i])) { continue; }
-        else if (std::isdigit(expression[i]) || expression[i] == '.') {
+        else if (std::isdigit(expression[i])) {
+            //TODO make parser function, make work with doubles
+            //TODO make work with negative numbers (new symbol for -? negative is --?)
             int num = 0;
             while (isdigit(expression[i])) {
                 num *= 10;
