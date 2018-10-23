@@ -2,7 +2,6 @@
 #include <stack>
 #include <cmath>
 #include <cstring>
-#include <cstdlib>
 
 int opOrder(char op) {
     switch (op) {
@@ -39,10 +38,8 @@ int evaluate(char expression[]) {
     for (int i = 0; i < strlen(expression); i++) {
         if (std::isspace(expression[i])) { continue; }
         else if (std::isdigit(expression[i]) || expression[i] == '.') {
-            double num = 0;
-            int decimal;
-            expression[i] == '.' ? decimal = 1 : decimal = 0;
-            while (isdigit(expression[i]) || decimal) {
+            int num = 0;
+            while (isdigit(expression[i])) {
                 num *= 10;
                 num += expression[i] - '0';
                 i++;
