@@ -45,6 +45,7 @@ int evaluate(char expression[]) {
                 num += expression[i] - '0';
                 i++;
             }
+            i--;
             values->push(num);
         }
 
