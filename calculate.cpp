@@ -1,3 +1,9 @@
+/*
+*TODO: File header
+*TODO: Testing
+*TODO: Function comments
+*/
+
 #include <iostream>
 #include <stack>
 #include <cmath>
@@ -22,6 +28,7 @@ double applyOperation(double x, double y, char op) {
     }
 }
 
+//TODO: Exception handling here
 void evaluateTops(std::stack<double>& values, std::stack<char>& operators) {
     double op2 = values.top();
     values.pop();
@@ -70,7 +77,6 @@ double evaluate(char expression[]) {
                     || expression[i] == '.'
                     || (expression[i] == '-' && expression[i+1] == '-')) {
             int start = i;
-            int end = i;
             if (expression[start] == '-' && expression[start+1] == '-') {
                 i += 2;
             }
