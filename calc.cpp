@@ -40,8 +40,12 @@ double applyOperation(double x, double y, char op) {
     }
 }
 
-//TODO: Exception handling here
+// Evaluate 2 values from the values stack using an operator from
+// the operator stack, then places solution on the values stack.
 void evaluateTops(std::stack<double>& values, std::stack<char>& operators) {
+    if (values.size() < 2 || operators.size() < 1) {
+        throw 1;
+    }
     double op2 = values.top();
     values.pop();
     double op1 = values.top();
@@ -118,7 +122,10 @@ double evaluate(char expression[]) {
     while (!operators.empty()) {
         evaluateTops(values, operators);
     }
-    return values.top(); // TODO: Check that values.size == 1 and operators.size == 1
+    if (values.size() != 1 || operators.size() != 0) { //bad expression
+        throw 1;
+    }
+    return values.top();
 }
 
 // Simplifies and prints out all expressions in arguments
@@ -133,7 +140,12 @@ int main(int argc, char* argv[]) {
         return 0;
     }
     for (int i = 1; i < argc; i++) {
-        std::cout << argv[i] << " = " << evaluate(argv[i]) << std::endl;
+        try {
+            std::cout << argv[i] << " = " << evaluate(argv[i]) << std::endl;
+        } catch (int e) {
+            std::cout << "\nInvalid expression: " << argv[i] << std::endl;
+            return e;
+        }
     }
     return 0;
 }
