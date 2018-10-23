@@ -75,7 +75,9 @@ int evaluate(char expression[]) {
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cout << "Evaluates simple expressions.\n"
-            "Valid symbols: + - * / ^ ()" << std::endl;
+            "Valid operations: + - * / ^ (). Spaces are disallowed unless"
+            "the argument is enclosed in \"quotation marks\". Handles"
+            "multiple expressions." << std::endl;
         return 0;
     }
     for (int i = 1; i < argc; i++) {
