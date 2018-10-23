@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cout << "Evaluates simple expressions.\n"
             "Valid operations: + - * / ^ (). Spaces are disallowed unless"
-            "the argument is enclosed in \"quotation marks\". Handles"
+            " the argument is enclosed in \"quotation marks\".\nHandles "
             "multiple expressions." << std::endl;
         return 0;
     }
