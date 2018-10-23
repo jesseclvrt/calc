@@ -1,14 +1,24 @@
 /*
-*TODO: File header
-*TODO: Testing
-*TODO: Function comments
-*/
+ * Jesse Calvert
+ * 10/23/2018
+ * CS480
+ * 
+ * Evaluates simple infix expressions.
+ * 
+ * Valid operations: + - * / ^ ()
+ * Represent negative numbers with a prepended '--' sign.
+ * Spaces and parenthesis are disallowed unless
+ * the argument is enclosed in "quotation marks".
+ * Handles multiple expressions.
+ */
 
 #include <iostream>
 #include <stack>
-#include <cmath>
-#include <cstring>
+#include <cmath> //pow(int, int)
+#include <cstring> //strlen(char[])
 
+// Returns the precedence of an operation, represented with a char.
+// Higher return values indicate higher precendence
 int opOrder(char op) {
     switch (op) {
         case('(') :             return 0;
@@ -18,6 +28,8 @@ int opOrder(char op) {
     }
 }
 
+// Takes two operands and a char representing an operation and returns
+// the result of that operation
 double applyOperation(double x, double y, char op) {
     switch (op) {
         case('+') : return x + y;
@@ -39,6 +51,8 @@ void evaluateTops(std::stack<double>& values, std::stack<char>& operators) {
     values.push(applyOperation(op1, op2, op));
 }
 
+// Parses a real number in char array and the indexes the indexes it starts and ends at
+// (inclusive) and returns the double that is represented. Negative numbers start with '--'
 double parseNum(char expression[], int start, int end) {
     bool negative = false;
     if (expression[start] == '-' && expression[start + 1] == '-') {
@@ -68,6 +82,7 @@ double parseNum(char expression[], int start, int end) {
     return solution;
 }
 
+// Given a char[] with an infix math expression, returns fully simplified solution
 double evaluate(char expression[]) {
     std::stack<double> values;
     std::stack<char> operators;
@@ -103,9 +118,10 @@ double evaluate(char expression[]) {
     while (!operators.empty()) {
         evaluateTops(values, operators);
     }
-    return values.top();
+    return values.top(); // TODO: Check that values.size == 1 and operators.size == 1
 }
 
+// Simplifies and prints out all expressions in arguments
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cout << "Evaluates simple infix expressions.\n"
